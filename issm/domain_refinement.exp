@@ -1,0 +1,10 @@
+## Name:DomainRefinement
+## Icon:0
+# Points Count  Value
+5 1.000000
+# X pos Y pos
+ 4000   50000
+ 4000  -50000
+-4000  -50000
+-4000   50000
+ 4000   50000

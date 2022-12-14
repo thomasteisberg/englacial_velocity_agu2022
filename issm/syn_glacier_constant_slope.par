@@ -1,0 +1,32 @@
+h_initial = 500;
+
+r = sqrt((md.mesh.x).^2 + (md.mesh.y).^2); % radius from center of domain
+
+disp('      creating thickness');
+
+md.geometry.base = base_elevation(r);
+md.geometry.bed = md.geometry.base;
+md.geometry.thickness = h_initial * ones(md.mesh.numberofvertices, 1);
+md.geometry.surface = md.geometry.base + md.geometry.thickness;
+
+disp('      creating drag');
+md.friction.coefficient=200*ones(md.mesh.numberofvertices,1);
+md.friction.p=ones(md.mesh.numberofelements,1);
+md.friction.q=ones(md.mesh.numberofelements,1);
+
+disp('      initial velocity');
+md.initialization.vx = zeros(md.mesh.numberofvertices,1);
+md.initialization.vy = zeros(md.mesh.numberofvertices,1);
+md.initialization.vz = zeros(md.mesh.numberofvertices,1);
+md.initialization.vel = zeros(md.mesh.numberofvertices,1);
+
+disp('      creating flow law parameter');
+md.materials.rheology_B = paterson((273-20)*ones(md.mesh.numberofvertices,1));
+md.materials.rheology_n = 3*ones(md.mesh.numberofelements,1);
+md.damage.D = zeros(md.mesh.numberofvertices,1);
+
+disp('      creating boundary conditions');
+md = SetIceSheetBC(md);
+
+disp('      setting SMB');
+md.smb.mass_balance = smb_distribution(r);
